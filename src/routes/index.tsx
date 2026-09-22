@@ -19,13 +19,12 @@ export const Route = createFileRoute("/")({
       { title: "ROSY AI — Đội ngũ AI cho người kinh doanh nhỏ" },
       {
         name: "description",
-        content:
-          "ROSY AI gồm 5 nhóm trợ lý AI hỗ trợ chiến lược, nghiên cứu, nội dung, tối ưu kênh và chăm sóc tương tác.",
+        content: "ROSY AI gồm 5 nhóm trợ lý AI được chia vai rõ ràng.",
       },
       { property: "og:title", content: "ROSY AI — Đừng thuê thêm người. Hãy xây một đội ngũ AI." },
       {
         property: "og:description",
-        content: "Biến công việc xây kênh và marketing thành một quy trình có đội ngũ AI hỗ trợ từng bước.",
+        content: "Xây một đội ngũ AI hỗ trợ đúng việc, đúng quy trình.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -46,41 +45,41 @@ const agents = [
   {
     icon: Target,
     title: "Chiến lược",
-    text: "Biến mục tiêu thành các ưu tiên và việc cần làm rõ ràng.",
+    text: "Biến mục tiêu thành việc cần làm.",
     tone: "bg-soft-rose text-brand",
   },
   {
     icon: Search,
     title: "Nghiên cứu",
-    text: "Tìm insight khách hàng, chủ đề, đối thủ và xu hướng nội dung.",
+    text: "Tìm insight, chủ đề và xu hướng.",
     tone: "bg-mint/20 text-ink",
   },
   {
     icon: Lightbulb,
     title: "Nội dung",
-    text: "Phát triển ý tưởng, bài viết, kịch bản video, caption và CTA.",
+    text: "Tạo bài viết, video, caption và CTA.",
     tone: "bg-accent-warm/30 text-ink",
   },
   {
     icon: BarChart3,
     title: "Tối ưu kênh",
-    text: "Hỗ trợ hook, tiêu đề, từ khóa và lịch đăng Facebook, YouTube.",
+    text: "Tối ưu hook, từ khóa và lịch đăng.",
     tone: "bg-soft-rose text-brand",
   },
   {
     icon: MessageCircleHeart,
     title: "Chăm sóc tương tác",
-    text: "Gợi ý phản hồi bình luận, tin nhắn và nuôi dưỡng khách hàng.",
+    text: "Gợi ý phản hồi và chăm khách.",
     tone: "bg-mint/20 text-ink",
   },
 ];
 
 const transformations = [
-  ["Một người phải tự làm tất cả", "Có hệ thống AI hỗ trợ từng nhóm việc"],
-  ["Không biết hôm nay đăng gì", "Có chủ đề và kế hoạch rõ ràng"],
-  ["Bí ý tưởng, nội dung ngắt quãng", "Có AI nghiên cứu và phát triển nội dung"],
-  ["Xây Facebook, YouTube rời rạc", "Có quy trình tối ưu kênh"],
-  ["Dễ bỏ sót bình luận, khách tiềm năng", "Có gợi ý chăm sóc tương tác"],
+  ["Tự làm tất cả", "AI hỗ trợ từng nhóm việc"],
+  ["Không biết đăng gì", "Có chủ đề và kế hoạch"],
+  ["Bí ý tưởng", "Có AI phát triển nội dung"],
+  ["Xây kênh rời rạc", "Có quy trình tối ưu"],
+  ["Bỏ sót khách", "Có gợi ý chăm sóc"],
 ];
 
 const faqs = [
@@ -140,8 +139,8 @@ function Index() {
                 </span>
                 .
               </h1>
-              <p className="mt-7 max-w-2xl text-lg font-medium leading-relaxed text-ink/70 md:text-xl">
-                Bạn không cần thêm một công cụ AI. Bạn cần một đội ngũ AI biết mình phải làm gì — từ chiến lược, nghiên cứu, nội dung đến tối ưu kênh và chăm sóc tương tác.
+              <p className="mt-7 max-w-xl text-lg font-medium leading-relaxed text-ink/70 md:text-xl">
+                Không thêm công cụ. Hãy có một đội ngũ AI biết hỗ trợ đúng việc.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <a href="#goi" className="pop-shadow-brand rounded-full bg-brand px-8 py-4 text-center text-lg font-extrabold text-primary-foreground transition-transform hover:-translate-y-1">
@@ -198,11 +197,11 @@ function Index() {
           <div className="mx-auto max-w-6xl px-5 sm:px-6">
             <p className="text-sm font-extrabold uppercase text-accent-warm">Có phải đây là một ngày quen thuộc?</p>
             <div className="mt-4 grid gap-8 lg:grid-cols-[1fr_.9fr] lg:items-end">
-              <h2 className="font-display text-4xl font-extrabold leading-tight md:text-5xl">Bạn biết mình cần làm content, xây kênh và chăm khách… nhưng một mình phải làm quá nhiều.</h2>
-              <p className="text-lg leading-relaxed text-primary-foreground/70">Mỗi ngày bắt đầu bằng câu hỏi “Hôm nay đăng gì?”, rồi kết thúc khi vẫn còn tin nhắn chưa trả lời, kênh chưa tối ưu và kế hoạch ngày mai chưa có.</p>
+              <h2 className="font-display text-4xl font-extrabold leading-tight md:text-5xl">Một mình bạn đang gánh quá nhiều.</h2>
+              <p className="text-lg leading-relaxed text-primary-foreground/70">Nội dung chưa đăng. Tin nhắn chưa trả lời. Kế hoạch vẫn bỏ ngỏ.</p>
             </div>
             <div className="mt-10 grid gap-4 md:grid-cols-3">
-              {["Thiếu thời gian, thiếu ý tưởng", "Nội dung đăng không đều", "Quá nhiều công cụ, không có quy trình"].map((item, index) => (
+              {["Thiếu thời gian, bí ý tưởng", "Nội dung thiếu đều đặn", "Nhiều công cụ, thiếu quy trình"].map((item, index) => (
                 <div key={item} className="rounded-3xl border-2 border-primary-foreground/10 bg-primary-foreground/5 p-6">
                   <span className="font-display text-4xl font-extrabold text-brand">0{index + 1}</span>
                   <p className="mt-3 text-lg font-bold">{item}</p>
@@ -215,19 +214,19 @@ function Index() {
         <section id="loi-ich" className="py-16 lg:py-24">
           <div className="mx-auto max-w-6xl px-5 sm:px-6">
             <div className="mx-auto max-w-3xl text-center">
-              <span className="inline-flex rounded-full bg-soft-rose px-4 py-2 text-sm font-extrabold text-brand">Vấn đề không phải là thiếu công cụ</span>
-              <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight md:text-5xl">Điều bạn thiếu là một <span className="text-brand">hệ thống biết chia việc.</span></h2>
-              <p className="mt-4 text-lg leading-relaxed text-ink/65">ROSY AI không cố làm mọi thứ bằng một chatbot. Mỗi nhóm AI được chia vai để hỗ trợ đúng việc, theo đúng trình tự.</p>
+              <span className="inline-flex rounded-full bg-soft-rose px-4 py-2 text-sm font-extrabold text-brand">Không thiếu công cụ. Thiếu hệ thống.</span>
+              <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight md:text-5xl">Một hệ thống <span className="text-brand">biết chia đúng việc.</span></h2>
+              <p className="mt-4 text-lg leading-relaxed text-ink/65">Năm nhóm AI. Năm vai trò. Một quy trình thống nhất.</p>
             </div>
             <div className="mt-12 grid items-center gap-5 lg:grid-cols-[1fr_auto_1.2fr]">
               <div className="rounded-3xl border-2 border-ink/10 bg-surface p-7">
                 <p className="text-sm font-extrabold uppercase text-ink/45">Cách cũ</p>
-                <p className="mt-3 font-display text-2xl font-extrabold">Một người → nhiều việc → nhiều công cụ → quá tải</p>
+                <p className="mt-3 font-display text-2xl font-extrabold">Một người → nhiều việc → quá tải</p>
               </div>
               <ArrowRight className="mx-auto size-8 rotate-90 text-brand lg:rotate-0" />
               <div className="pop-shadow rounded-3xl bg-accent-warm p-7">
                 <p className="text-sm font-extrabold uppercase text-ink/55">Cơ chế ROSY AI</p>
-                <p className="mt-3 font-display text-2xl font-extrabold">Một người → ROSY AI điều phối → 5 nhóm hỗ trợ → quy trình rõ ràng</p>
+                <p className="mt-3 font-display text-2xl font-extrabold">Một người → 5 nhóm AI → đúng quy trình</p>
               </div>
             </div>
           </div>
@@ -238,9 +237,9 @@ function Index() {
             <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
               <div className="max-w-3xl">
                 <p className="text-sm font-extrabold uppercase text-brand">5 nhóm Sub Agent phối hợp</p>
-                <h2 className="mt-3 font-display text-4xl font-extrabold leading-tight md:text-5xl">Một đội ngũ. Năm vai trò. Một mục tiêu chung.</h2>
+                <h2 className="mt-3 font-display text-4xl font-extrabold leading-tight md:text-5xl">Năm vai trò. Một đội ngũ AI.</h2>
               </div>
-              <p className="max-w-sm text-ink/65">Giúp bạn làm việc có định hướng hơn, đều hơn và bớt thủ công hơn.</p>
+              <p className="max-w-sm text-ink/65">Đúng người, đúng việc, đúng trình tự.</p>
             </div>
             <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {agents.map((agent, index) => (
@@ -250,13 +249,13 @@ function Index() {
                   </div>
                   <p className={`mt-5 text-xs font-extrabold uppercase ${index === 1 ? "text-accent-warm" : "text-brand"}`}>Nhóm 0{index + 1}</p>
                   <h3 className="mt-1 font-display text-2xl font-extrabold">{agent.title}</h3>
-                  <p className={`mt-2 leading-relaxed ${index === 1 ? "text-primary-foreground/70" : "text-ink/65"}`}>{agent.text}</p>
+                  <p className={`mt-2 line-clamp-2 leading-relaxed ${index === 1 ? "text-primary-foreground/70" : "text-ink/65"}`}>{agent.text}</p>
                 </article>
               ))}
               <article className="pop-shadow-brand flex flex-col justify-center rounded-3xl bg-brand p-7 text-primary-foreground">
                 <Sparkles className="size-9 text-accent-warm" />
                 <h3 className="mt-4 font-display text-3xl font-extrabold">Bạn vẫn là người quyết định.</h3>
-                <p className="mt-2 text-primary-foreground/80">AI hỗ trợ chuẩn bị và gợi ý. Bạn giữ quyền kiểm soát định hướng cuối cùng.</p>
+                <p className="mt-2 text-primary-foreground/80">AI chuẩn bị. Bạn kiểm soát.</p>
               </article>
             </div>
           </div>
@@ -265,8 +264,8 @@ function Index() {
         <section className="py-16 lg:py-24">
           <div className="mx-auto max-w-6xl px-5 sm:px-6">
             <div className="mx-auto max-w-3xl text-center">
-              <p className="text-sm font-extrabold uppercase text-brand">Từ xoay xở sang có hệ thống</p>
-              <h2 className="mt-3 font-display text-4xl font-extrabold md:text-5xl">Bạn không cần làm ít đi vì bỏ việc. Bạn làm nhẹ hơn vì có hỗ trợ.</h2>
+              <p className="text-sm font-extrabold uppercase text-brand">Trước và sau ROSY AI</p>
+              <h2 className="mt-3 font-display text-4xl font-extrabold md:text-5xl">Từ xoay xở đến có hệ thống.</h2>
             </div>
             <div className="mt-10 overflow-hidden rounded-3xl border-2 border-ink/10 bg-surface">
               <div className="grid grid-cols-2 bg-ink px-5 py-4 font-extrabold text-primary-foreground sm:px-8">
@@ -286,8 +285,8 @@ function Index() {
           <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-6 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
             <div>
               <Youtube className="size-12 text-brand" />
-              <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight md:text-5xl">Từ một ý tưởng đến cả quy trình nội dung.</h2>
-              <p className="mt-4 text-lg leading-relaxed text-ink/70">Thay vì hỏi AI từng câu rời rạc, ROSY AI giúp công việc chạy theo một chuỗi có logic.</p>
+              <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight md:text-5xl">Một ý tưởng. Cả quy trình nội dung.</h2>
+              <p className="mt-4 text-lg leading-relaxed text-ink/70">Không còn những câu hỏi AI rời rạc.</p>
             </div>
             <div className="space-y-3">
               {["Chiến lược", "Nghiên cứu", "Nội dung", "Tối ưu kênh", "Chăm sóc tương tác"].map((step, index) => (
@@ -307,11 +306,11 @@ function Index() {
               <div className="relative grid gap-10 lg:grid-cols-[1fr_.9fr] lg:items-center">
                 <div>
                   <span className="inline-flex rounded-full bg-primary-foreground/15 px-4 py-2 text-sm font-extrabold">Ưu đãi mở bán đầu tiên</span>
-                  <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight md:text-5xl">Sở hữu đội ngũ ROSY AI của riêng bạn.</h2>
-                  <p className="mt-4 max-w-xl text-lg leading-relaxed text-primary-foreground/80">Hệ thống 5 nhóm Sub Agent, hướng dẫn sử dụng và sự đồng hành của Thủy & Hồng — dành cho cả người chưa rành công nghệ.</p>
+                  <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight md:text-5xl">Xây đội ngũ ROSY AI của bạn.</h2>
+                  <p className="mt-4 max-w-xl text-lg leading-relaxed text-primary-foreground/80">5 nhóm AI, hướng dẫn dễ hiểu, đồng hành cùng Thủy & Hồng.</p>
                   <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                    {["5 nhóm Sub Agent rõ vai trò", "Hướng dẫn sử dụng dễ hiểu", "Quy trình content & xây kênh", "Đồng hành cùng Thủy & Hồng"].map((item) => (
-                      <div key={item} className="flex items-center gap-2 font-semibold"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-accent-warm text-ink"><Check className="size-4" /></span>{item}</div>
+                    {["5 nhóm AI rõ vai trò", "Hướng dẫn dễ hiểu", "Quy trình content & kênh", "Thủy & Hồng đồng hành"].map((item) => (
+                      <div key={item} className="flex items-center gap-2 whitespace-nowrap text-sm font-semibold"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-accent-warm text-ink"><Check className="size-4" /></span>{item}</div>
                     ))}
                   </div>
                 </div>
@@ -335,8 +334,8 @@ function Index() {
           <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-6 lg:grid-cols-[.75fr_1.25fr]">
             <div>
               <p className="text-sm font-extrabold uppercase text-brand">Câu hỏi thường gặp</p>
-              <h2 className="mt-3 font-display text-4xl font-extrabold leading-tight md:text-5xl">Bạn đang băn khoăn điều gì?</h2>
-              <p className="mt-4 text-ink/65">ROSY AI là hệ thống hỗ trợ công việc, không phải lời hứa “AI làm mọi thứ”.</p>
+              <h2 className="mt-3 font-display text-4xl font-extrabold leading-tight md:text-5xl">Điều bạn cần biết.</h2>
+              <p className="mt-4 text-ink/65">ROSY AI hỗ trợ công việc, không “làm mọi thứ”.</p>
             </div>
             <div className="space-y-4">
               {faqs.map(([question, answer]) => (
@@ -355,11 +354,11 @@ function Index() {
         <section id="lien-he" className="bg-ink py-16 text-center text-primary-foreground lg:py-24">
           <div className="mx-auto max-w-3xl px-5 sm:px-6">
             <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-brand"><Sparkles className="size-8" /></div>
-            <h2 className="mt-6 font-display text-4xl font-extrabold leading-tight md:text-6xl">Bạn không cần trở thành chuyên gia AI.</h2>
-            <p className="mt-5 text-lg leading-relaxed text-primary-foreground/70">Bạn chỉ cần một đội ngũ AI biết hỗ trợ đúng việc — và Thủy & Hồng đồng hành để bắt đầu dễ dàng hơn.</p>
+            <h2 className="mt-6 font-display text-4xl font-extrabold leading-tight md:text-6xl">Không cần giỏi AI. Cần đúng đội ngũ.</h2>
+            <p className="mt-5 text-lg leading-relaxed text-primary-foreground/70">Năm nhóm AI hỗ trợ đúng việc. Thủy & Hồng giúp bạn bắt đầu.</p>
             <div className="mx-auto mt-8 max-w-xl rounded-3xl border-2 border-primary-foreground/10 bg-primary-foreground/5 p-6">
               <p className="font-display text-2xl font-extrabold">Sẵn sàng sở hữu ROSY AI?</p>
-              <p className="mt-2 text-sm text-primary-foreground/65">Kênh đăng ký và thanh toán đang được cập nhật. Hãy liên hệ trực tiếp Thủy & Hồng để được tư vấn.</p>
+              <p className="mt-2 text-sm text-primary-foreground/65">Kênh thanh toán đang cập nhật. Hãy liên hệ Thủy & Hồng.</p>
               <span className="mt-5 inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-primary-foreground/15 px-7 py-3.5 font-bold text-primary-foreground/60" aria-disabled="true">
                 Link đăng ký đang cập nhật
               </span>
@@ -371,7 +370,7 @@ function Index() {
       <footer className="border-t-2 border-ink/10 bg-cream">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-center sm:flex-row sm:px-6 sm:text-left">
           <div className="flex items-center gap-2"><span className="grid size-9 place-items-center rounded-xl bg-brand font-display font-extrabold text-primary-foreground">R</span><span className="font-display font-extrabold">ROSY AI</span></div>
-          <p className="text-sm text-ink/50">Đội ngũ AI đồng hành cùng người kinh doanh nhỏ.</p>
+          <p className="text-sm text-ink/50">Năm nhóm AI. Một quy trình.</p>
         </div>
       </footer>
 
