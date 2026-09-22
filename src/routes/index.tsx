@@ -323,7 +323,7 @@ function Index() {
                   <a href="#lien-he" className="pop-shadow-small mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-4 text-center text-lg font-extrabold text-primary-foreground transition-transform hover:-translate-y-0.5">
                     Tôi muốn sở hữu ROSY AI <ArrowRight className="size-5" />
                   </a>
-                  <p className="mt-4 text-center text-xs leading-relaxed text-ink/50">Mức 499.000đ áp dụng trong đợt mở bán đầu tiên. Không sử dụng đồng hồ đếm ngược giả.</p>
+                  <p className="mt-4 text-center text-xs leading-relaxed text-ink/50">499.000đ áp dụng trong đợt mở bán đầu tiên.</p>
                 </div>
               </div>
             </div>
