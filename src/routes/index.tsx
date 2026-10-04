@@ -165,7 +165,7 @@ function Index() {
                 <div className="pop-shadow relative rounded-2xl bg-surface p-5 sm:p-6">
                   <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
                     <div className="min-w-0">
-                      <p className="truncate font-display text-xl font-extrabold">Đội ngũ ROSY</p>
+                      <p className="truncate font-display text-xl font-extrabold">ĐỘI NGŨ SUB AGENT</p>
                       <p className="text-xs font-semibold text-ink/65">5 vai trò • 1 quy trình</p>
                     </div>
                     <span className="shrink-0 rounded-full bg-mint/20 px-3 py-1 text-xs font-bold">Sẵn sàng</span>
