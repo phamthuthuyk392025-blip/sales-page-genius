@@ -107,7 +107,7 @@ function Index() {
       <header className="sticky top-0 z-50 border-b border-ink/10 bg-cream/90 backdrop-blur-md">
         <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 py-3 sm:flex sm:justify-between sm:px-6">
           <a href="#top" className="flex min-w-0 items-center gap-2" aria-label="ĐỘI NGŨ SUB AGENT - về đầu trang">
-            <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-brand font-display text-xl font-extrabold text-primary-foreground">R</span>
+            <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-brand font-display text-xl font-extrabold text-primary-foreground">S</span>
             <span className="truncate font-display text-xl font-extrabold">ĐỘI NGŨ SUB AGENT</span>
           </a>
           <nav className="hidden items-center gap-8 text-sm font-bold md:flex" aria-label="Điều hướng chính">
@@ -306,7 +306,7 @@ function Index() {
               <div className="relative grid gap-10 lg:grid-cols-[1fr_.9fr] lg:items-center">
                 <div>
                   <span className="inline-flex rounded-full bg-primary-foreground/15 px-4 py-2 text-sm font-extrabold">Ưu đãi mở bán đầu tiên</span>
-                  <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight md:text-5xl">Xây đội ngũ ĐỘI NGŨ SUB AGENT của bạn.</h2>
+                  <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight md:text-5xl">Xây ĐỘI NGŨ SUB AGENT của bạn.</h2>
                   <p className="mt-4 max-w-xl text-lg leading-relaxed text-primary-foreground/80">5 nhóm AI, hướng dẫn dễ hiểu, đồng hành cùng Thủy & Hồng.</p>
                   <div className="mt-7 grid gap-3 sm:grid-cols-2">
                     {["5 nhóm AI rõ vai trò", "Hướng dẫn dễ hiểu", "Quy trình content & kênh", "Thủy & Hồng đồng hành"].map((item) => (
@@ -369,7 +369,7 @@ function Index() {
 
       <footer className="border-t border-ink/10 bg-cream">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-center sm:flex-row sm:px-6 sm:text-left">
-          <div className="flex items-center gap-2"><span className="grid size-9 place-items-center rounded-lg bg-brand font-display font-extrabold text-primary-foreground">R</span><span className="font-display font-extrabold">ĐỘI NGŨ SUB AGENT</span></div>
+          <div className="flex items-center gap-2"><span className="grid size-9 place-items-center rounded-lg bg-brand font-display font-extrabold text-primary-foreground">S</span><span className="font-display font-extrabold">ĐỘI NGŨ SUB AGENT</span></div>
           <p className="text-sm text-ink/65">Năm nhóm AI. Một quy trình.</p>
         </div>
       </footer>
