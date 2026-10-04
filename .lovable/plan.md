@@ -1,17 +1,22 @@
-# Tối ưu câu chữ sales page ROSY AI
+# Kế hoạch cập nhật trang bán hàng
 
-## Mục tiêu
-Rút gọn 40–50% tổng lượng chữ, giữ sức thuyết phục và giúp người đọc lướt nhanh trên điện thoại.
+## Nội dung sẽ làm
+- Đổi toàn bộ giá bán và CTA từ 499.000đ thành 999.000đ; cập nhật số tiền tiết kiệm tương ứng.
+- Tạo và đặt một ảnh minh họa phù hợp vào khu vực đầu trang, không thay đổi cấu trúc nội dung chính.
+- Thêm khu vực phản hồi dạng hội thoại Zalo; mọi nội dung tự biên soạn sẽ được ghi rõ là “Tin nhắn minh họa”, không trình bày như đánh giá thật.
+- Thay khu vực liên hệ bằng biểu mẫu Họ tên, Số Zalo và Gmail. Khi hợp lệ, biểu mẫu chuyển người mua tới phần thanh toán.
+- Hiển thị logo BIDV, chủ tài khoản Phạm Thị Thu Thủy, số tài khoản 4831027136 và cú pháp “Số Zalo + SUBAGENT”.
+- Thêm nút gửi bill vào nhóm Zalo: https://zalo.me/g/1kudiz2qumbnnhjtcidj
 
-## Thực hiện
-- Cắt câu lặp, câu giải thích điều đã rõ và phần mở đầu không tạo thêm lực bán.
-- Rút headline còn 6–10 từ; mô tả mỗi phần tối đa 2 câu.
-- Viết lại bullet ngắn, ưu tiên vừa một dòng trên điện thoại.
-- Giữ nguyên giá, mức tiết kiệm, tên Thủy & Hồng, nội dung giảm rủi ro, CTA và đích liên kết.
-- Đồng bộ toàn bộ CTA với thông điệp “xây một đội ngũ AI”, không dùng lời kêu gọi chung chung.
-- Kiểm tra toàn trang ở màn hình điện thoại 614px, xử lý mọi đoạn văn dài quá 2 dòng.
+## Trải nghiệm mua hàng
+1. Khách nhập và xác nhận thông tin.
+2. Trang cuộn tới hướng dẫn chuyển khoản và tự tạo đúng nội dung thanh toán từ số Zalo.
+3. Sau khi chuyển khoản, khách mở nhóm Zalo để gửi bill xác nhận.
 
-## Kiểm chứng
-- So sánh lượng chữ trước và sau để xác nhận mức giảm.
-- Đọc lướt từ đầu đến cuối để bảo đảm thông điệp “đội ngũ AI được chia vai” xuyên suốt.
-- Kiểm tra trực tiếp các phần chính và CTA trên bản xem trước điện thoại.
+## Kiểm tra
+- Kiểm tra biểu mẫu, lỗi nhập liệu, chuyển bước thanh toán và liên kết Zalo.
+- Kiểm tra không tràn ngang, không che nội dung, các nút dễ bấm trên điện thoại.
+- Kiểm tra giao diện và luồng hoàn chỉnh trên điện thoại và máy tính.
+
+## Giới hạn
+- Trang không tự xác nhận giao dịch ngân hàng; xác nhận được thực hiện thủ công qua bill gửi trong nhóm Zalo.
