@@ -152,11 +152,11 @@ function Index() {
     const result = checkoutSchema.safeParse(form);
     if (!result.success) {
       const fieldErrors = result.error.flatten().fieldErrors;
-      setErrors({
-        name: fieldErrors.name?.[0],
-        zalo: fieldErrors.zalo?.[0],
-        email: fieldErrors.email?.[0],
-      });
+      const nextErrors: Partial<Record<keyof CheckoutForm, string>> = {};
+      if (fieldErrors.name?.[0]) nextErrors.name = fieldErrors.name[0];
+      if (fieldErrors.zalo?.[0]) nextErrors.zalo = fieldErrors.zalo[0];
+      if (fieldErrors.email?.[0]) nextErrors.email = fieldErrors.email[0];
+      setErrors(nextErrors);
       setShowPayment(false);
       return;
     }
