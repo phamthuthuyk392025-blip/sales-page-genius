@@ -7,4 +7,4 @@
 - [x] Cập nhật toàn bộ giá bán thành 999.000đ
 - [x] Thêm ảnh minh họa và phản hồi dạng tin nhắn Zalo có nhãn minh họa
 - [x] Thêm biểu mẫu thông tin và hướng dẫn chuyển khoản BIDV
-- [ ] Kiểm tra luồng mua hàng trên điện thoại và máy tính
+- [x] Kiểm tra luồng mua hàng trên điện thoại và máy tính

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { z } from "zod";
 import {
   ArrowDown,
@@ -145,7 +145,16 @@ function Index() {
   const [errors, setErrors] = useState<Partial<Record<keyof CheckoutForm, string>>>({});
   const [showPayment, setShowPayment] = useState(false);
   const [copied, setCopied] = useState<"account" | "content" | null>(null);
+  const [checkoutVisible, setCheckoutVisible] = useState(false);
   const paymentContent = `${form.zalo.trim()} SUBAGENT`;
+
+  useEffect(() => {
+    const checkout = document.getElementById("lien-he");
+    if (!checkout) return;
+    const observer = new IntersectionObserver(([entry]) => setCheckoutVisible(Boolean(entry?.isIntersecting)), { threshold: 0.05 });
+    observer.observe(checkout);
+    return () => observer.disconnect();
+  }, []);
 
   function handleCheckout(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -491,9 +500,11 @@ function Index() {
         </div>
       </footer>
 
-      <a href="#goi" className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 right-4 z-[60] flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-primary-foreground/15 bg-brand px-5 py-3.5 text-sm font-extrabold text-primary-foreground shadow-xl md:hidden">
-        Sở hữu ĐỘI NGŨ SUB AGENT — 999K <ArrowRight className="size-4" />
-      </a>
+      {!checkoutVisible && (
+        <a href="#goi" className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 right-4 z-[60] flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-primary-foreground/15 bg-brand px-5 py-3.5 text-sm font-extrabold text-primary-foreground shadow-xl md:hidden">
+          Sở hữu ĐỘI NGŨ SUB AGENT — 999K <ArrowRight className="size-4" />
+        </a>
+      )}
     </div>
   );
 }
