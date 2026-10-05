@@ -1,17 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState, type FormEvent } from "react";
+import { z } from "zod";
 import {
   ArrowDown,
   ArrowRight,
   BarChart3,
   Check,
   ChevronDown,
+  Copy,
+  ExternalLink,
   Lightbulb,
+  LockKeyhole,
   MessageCircleHeart,
   Search,
   Sparkles,
   Target,
   Youtube,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import subagentIllustration from "@/assets/subagent-illustration.svg";
+import bidvLogo from "@/assets/bidv-logo.svg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -101,7 +111,77 @@ const faqs = [
   ],
 ];
 
+const checkoutSchema = z.object({
+  name: z.string().trim().min(2, "Vui lòng nhập họ tên.").max(100, "Họ tên tối đa 100 ký tự."),
+  zalo: z
+    .string()
+    .trim()
+    .regex(/^(?:\+?84|0)[0-9]{9,10}$/, "Vui lòng nhập đúng số Zalo Việt Nam."),
+  email: z.string().trim().email("Vui lòng nhập đúng địa chỉ Gmail.").max(255, "Email tối đa 255 ký tự.").refine((value) => value.toLowerCase().endsWith("@gmail.com"), "Vui lòng sử dụng địa chỉ @gmail.com."),
+});
+
+type CheckoutForm = z.infer<typeof checkoutSchema>;
+
+const sampleFeedback = [
+  {
+    name: "Chị Mai",
+    time: "09:18",
+    message: "Trước đây chị hay bí ý tưởng. Có quy trình chia từng nhóm việc như vậy thì dễ bắt đầu hơn nhiều.",
+  },
+  {
+    name: "Chị Lan",
+    time: "20:42",
+    message: "Phần hướng dẫn rất dễ hiểu. Chị không rành công nghệ nhưng vẫn biết nên giao việc gì cho từng trợ lý.",
+  },
+  {
+    name: "Anh Minh",
+    time: "14:05",
+    message: "Điểm chị thích là không hỏi AI lan man nữa. Mỗi bước đều rõ mục tiêu và đầu ra cần có.",
+  },
+];
+
 function Index() {
+  const [form, setForm] = useState<CheckoutForm>({ name: "", zalo: "", email: "" });
+  const [errors, setErrors] = useState<Partial<Record<keyof CheckoutForm, string>>>({});
+  const [showPayment, setShowPayment] = useState(false);
+  const [copied, setCopied] = useState<"account" | "content" | null>(null);
+  const [checkoutVisible, setCheckoutVisible] = useState(false);
+  const paymentContent = `${form.zalo.trim()} SUBAGENT`;
+
+  useEffect(() => {
+    const checkout = document.getElementById("lien-he");
+    if (!checkout) return;
+    const observer = new IntersectionObserver(([entry]) => setCheckoutVisible(Boolean(entry?.isIntersecting)), { threshold: 0.05 });
+    observer.observe(checkout);
+    return () => observer.disconnect();
+  }, []);
+
+  function handleCheckout(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const result = checkoutSchema.safeParse(form);
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      const nextErrors: Partial<Record<keyof CheckoutForm, string>> = {};
+      if (fieldErrors.name?.[0]) nextErrors.name = fieldErrors.name[0];
+      if (fieldErrors.zalo?.[0]) nextErrors.zalo = fieldErrors.zalo[0];
+      if (fieldErrors.email?.[0]) nextErrors.email = fieldErrors.email[0];
+      setErrors(nextErrors);
+      setShowPayment(false);
+      return;
+    }
+
+    setForm(result.data);
+    setErrors({});
+    setShowPayment(true);
+    requestAnimationFrame(() => document.getElementById("thanh-toan")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }
+
+  async function copyPayment(value: string, type: "account" | "content") {
+    await navigator.clipboard.writeText(value);
+    setCopied(type);
+    window.setTimeout(() => setCopied(null), 1600);
+  }
+
   return (
     <div className="min-h-screen overflow-x-clip bg-cream pb-24 md:pb-0 font-body text-ink antialiased">
       <header className="sticky top-0 z-50 border-b border-ink/10 bg-cream/90 backdrop-blur-md">
@@ -127,7 +207,7 @@ function Index() {
           <div className="grid items-center gap-12 lg:grid-cols-12">
             <div className="lg:col-span-7">
               <div className="inline-flex items-center gap-2 rounded-full border border-brand/15 bg-soft-rose px-4 py-2 text-brand text-sm font-bold">
-                <span className="size-2 rounded-full bg-brand" /> Giá mở bán chỉ 499.000đ
+                <span className="size-2 rounded-full bg-brand" /> Giá mở bán chỉ 999.000đ
               </div>
               <h1 className="mt-6 max-w-4xl font-display text-5xl font-extrabold leading-[0.98] md:text-7xl">
                 Đừng thuê thêm người. <span className="text-brand">Hãy xây một</span>{" "}
@@ -144,7 +224,7 @@ function Index() {
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <a href="#goi" className="inline-flex min-h-14 items-center justify-center rounded-2xl bg-brand px-8 py-4 shadow-lg shadow-brand/20 text-center text-lg font-extrabold text-primary-foreground transition-transform active:scale-[0.98] sm:active:scale-[0.98] sm:hover:-translate-y-0.5">
-                  Sở hữu ĐỘI NGŨ SUB AGENT — 499K
+                  Sở hữu ĐỘI NGŨ SUB AGENT — 999K
                 </a>
                 <a href="#doi-ngu" className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl border-2 border-ink/20 bg-surface px-8 py-4 text-lg font-bold transition-colors hover:bg-ink hover:text-primary-foreground">
                   Xem 5 nhóm AI <ArrowDown className="size-5" />
@@ -162,7 +242,9 @@ function Index() {
             <div className="lg:col-span-5">
               <div className="relative mx-auto max-w-md">
                 <div className="absolute -inset-3 rotate-3 rounded-2xl bg-accent-warm" />
-                <div className="pop-shadow relative rounded-2xl bg-surface p-5 sm:p-6">
+                <div className="pop-shadow relative overflow-hidden rounded-2xl bg-surface p-4 sm:p-5">
+                  <img src={subagentIllustration} alt="Minh họa nữ chủ doanh nghiệp làm việc cùng năm trợ lý AI" className="aspect-[4/5] w-full rounded-xl object-cover" />
+                  <div className="absolute inset-x-7 bottom-7 rounded-xl border border-ink/10 bg-surface/95 p-4 shadow-lg backdrop-blur-sm">
                   <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
                     <div className="min-w-0">
                       <p className="truncate font-display text-xl font-extrabold">ĐỘI NGŨ SUB AGENT</p>
@@ -170,22 +252,9 @@ function Index() {
                     </div>
                     <span className="shrink-0 rounded-full bg-mint/20 px-3 py-1 text-xs font-bold">Sẵn sàng</span>
                   </div>
-                  <div className="mt-5 space-y-3">
-                    {agents.map((agent, index) => (
-                      <div key={agent.title} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl bg-cream p-3">
-                        <span className={`grid size-10 shrink-0 place-items-center rounded-xl ${agent.tone}`}>
-                          <agent.icon className="size-5" />
-                        </span>
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-extrabold">{agent.title}</p>
-                          <p className="truncate text-xs text-ink/70">{index === 0 ? "Xác định hướng đi" : index === 1 ? "Tìm đúng insight" : index === 2 ? "Tạo nội dung đều" : index === 3 ? "Xây kênh bài bản" : "Gợi ý phản hồi"}</p>
-                        </div>
-                        <Check className="size-5 shrink-0 text-brand" />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="rosy-bob absolute -right-5 -top-6 grid size-16 place-items-center rounded-2xl bg-brand text-primary-foreground shadow-lg sm:-right-8">
-                    <Sparkles className="size-8" />
+                    <div className="mt-3 flex gap-1.5" aria-label="Năm nhóm trợ lý đã sẵn sàng">
+                      {agents.map((agent) => <span key={agent.title} className="h-2 flex-1 rounded-full bg-brand" />)}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -318,13 +387,40 @@ function Index() {
                   <p className="text-sm font-bold text-ink/65">Giá niêm yết</p>
                   <p className="text-xl font-bold text-ink/40 line-through">1.999.000đ</p>
                   <p className="mt-4 text-sm font-extrabold uppercase text-brand">Giá mở bán</p>
-                  <p className="font-display text-5xl font-extrabold leading-none sm:text-6xl">499.000đ</p>
-                  <p className="mt-2 font-bold text-brand">Tiết kiệm 1.500.000đ (~75%)</p>
+                  <p className="font-display text-5xl font-extrabold leading-none sm:text-6xl">999.000đ</p>
+                  <p className="mt-2 font-bold text-brand">Tiết kiệm 1.000.000đ (~50%)</p>
                   <a href="#lien-he" className="mt-7 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-brand px-6 py-4 shadow-lg shadow-brand/20 text-center text-lg font-extrabold text-primary-foreground transition-transform active:scale-[0.98] sm:hover:-translate-y-0.5">
                     Tôi muốn sở hữu ĐỘI NGŨ SUB AGENT <ArrowRight className="size-5" />
                   </a>
-                  <p className="mt-4 text-center text-xs leading-relaxed text-ink/65">499.000đ áp dụng trong đợt mở bán đầu tiên.</p>
+                  <p className="mt-4 text-center text-xs leading-relaxed text-ink/65">999.000đ áp dụng trong đợt mở bán đầu tiên.</p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-cream py-16 lg:py-24" aria-labelledby="feedback-title">
+          <div className="mx-auto max-w-6xl px-5 sm:px-6">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-sm font-extrabold uppercase text-brand">Hình dung trải nghiệm sử dụng</p>
+              <h2 id="feedback-title" className="mt-3 font-display text-4xl font-extrabold leading-tight md:text-5xl">Tin nhắn sau khi bắt đầu.</h2>
+              <p className="mt-4 text-ink/75">Các đoạn dưới đây là tin nhắn minh họa, không phải đánh giá khách hàng thật.</p>
+            </div>
+            <div className="mx-auto mt-10 max-w-4xl rounded-2xl border border-ink/10 bg-surface shadow-sm">
+              <div className="flex items-center justify-between border-b border-ink/10 px-5 py-4">
+                <div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-full bg-brand font-bold text-primary-foreground">S</span><div><p className="font-bold">Cộng đồng SUB AGENT</p><p className="text-xs text-ink/60">Tin nhắn minh họa</p></div></div>
+                <span className="rounded-full bg-mint/25 px-3 py-1 text-xs font-bold">Zalo</span>
+              </div>
+              <div className="space-y-5 bg-soft-rose/50 p-5 sm:p-8">
+                {sampleFeedback.map((item, index) => (
+                  <div key={item.name} className={`flex gap-3 ${index === 1 ? "sm:ml-12" : ""}`}>
+                    <span className="grid size-10 shrink-0 place-items-center rounded-full bg-accent-warm text-sm font-extrabold">{item.name.slice(-1)}</span>
+                    <div className="max-w-2xl min-w-0 rounded-2xl rounded-tl-sm bg-surface p-4 shadow-sm">
+                      <div className="flex items-center justify-between gap-4"><strong className="text-sm">{item.name}</strong><span className="text-xs text-ink/50">{item.time}</span></div>
+                      <p className="mt-2 text-sm leading-relaxed text-ink/75 sm:text-base">{item.message}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -351,17 +447,47 @@ function Index() {
           </div>
         </section>
 
-        <section id="lien-he" className="bg-ink py-16 text-center text-primary-foreground lg:py-24">
-          <div className="mx-auto max-w-3xl px-5 sm:px-6">
+        <section id="lien-he" className="scroll-mt-24 bg-ink py-16 text-primary-foreground lg:py-24">
+          <div className="mx-auto max-w-5xl px-5 sm:px-6">
+            <div className="text-center">
             <div className="mx-auto grid size-16 place-items-center rounded-xl bg-brand"><Sparkles className="size-8" /></div>
             <h2 className="mt-6 font-display text-4xl font-extrabold leading-tight md:text-6xl">Không cần giỏi AI. Cần đúng đội ngũ.</h2>
-            <p className="mt-5 text-lg leading-relaxed text-primary-foreground/80">Năm nhóm AI hỗ trợ đúng việc. Thủy & Hồng giúp bạn bắt đầu.</p>
-            <div className="mx-auto mt-8 max-w-xl rounded-2xl border border-primary-foreground/15 bg-primary-foreground/5 p-6">
-              <p className="font-display text-2xl font-extrabold">Sẵn sàng sở hữu ĐỘI NGŨ SUB AGENT?</p>
-              <p className="mt-2 text-sm text-primary-foreground/75">Kênh thanh toán đang cập nhật. Hãy liên hệ Thủy & Hồng.</p>
-              <span className="mt-5 inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-primary-foreground/15 px-7 py-3.5 font-bold text-primary-foreground/60" aria-disabled="true">
-                Link đăng ký đang cập nhật
-              </span>
+            <p className="mt-5 text-lg leading-relaxed text-primary-foreground/80">Điền thông tin để nhận đúng nội dung chuyển khoản.</p>
+            </div>
+
+            <div className="mx-auto mt-10 grid max-w-4xl gap-6 lg:grid-cols-[.9fr_1.1fr]">
+              <form onSubmit={handleCheckout} noValidate className="rounded-2xl bg-surface p-6 text-left text-ink shadow-xl sm:p-8">
+                <p className="font-display text-2xl font-extrabold">Thông tin của bạn</p>
+                <p className="mt-2 text-sm text-ink/65">Dùng để đối chiếu khi xác nhận thanh toán.</p>
+                <div className="mt-6 space-y-5">
+                  <div className="space-y-2"><Label htmlFor="name">Họ và tên</Label><Input id="name" autoComplete="name" maxLength={100} className="min-h-12 bg-cream" placeholder="Nguyễn Thị Mai" value={form.name} onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "name-error" : undefined} />{errors.name && <p id="name-error" className="text-sm font-semibold text-destructive">{errors.name}</p>}</div>
+                  <div className="space-y-2"><Label htmlFor="zalo">Số Zalo</Label><Input id="zalo" type="tel" inputMode="tel" autoComplete="tel" maxLength={12} className="min-h-12 bg-cream" placeholder="0912345678" value={form.zalo} onChange={(event) => setForm((current) => ({ ...current, zalo: event.target.value.replace(/[^0-9+]/g, "") }))} aria-invalid={Boolean(errors.zalo)} aria-describedby={errors.zalo ? "zalo-error" : undefined} />{errors.zalo && <p id="zalo-error" className="text-sm font-semibold text-destructive">{errors.zalo}</p>}</div>
+                  <div className="space-y-2"><Label htmlFor="email">Gmail</Label><Input id="email" type="email" inputMode="email" autoComplete="email" maxLength={255} className="min-h-12 bg-cream" placeholder="tenban@gmail.com" value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "email-error" : undefined} />{errors.email && <p id="email-error" className="text-sm font-semibold text-destructive">{errors.email}</p>}</div>
+                </div>
+                <Button type="submit" className="mt-7 min-h-14 w-full rounded-xl bg-brand px-6 text-base font-extrabold hover:bg-brand-deep">Tiếp tục đến thanh toán <ArrowRight /></Button>
+                <p className="mt-4 text-center text-xs leading-relaxed text-ink/60">Thông tin chỉ dùng để đối chiếu đơn hàng.</p>
+              </form>
+
+              <div id="thanh-toan" className="scroll-mt-24">
+                {!showPayment ? (
+                  <div className="flex h-full min-h-72 flex-col items-center justify-center rounded-2xl border border-primary-foreground/15 bg-primary-foreground/5 p-7 text-center">
+                    <div className="grid size-14 place-items-center rounded-xl bg-primary-foreground/10"><LockKeyhole className="size-7" /></div>
+                    <p className="mt-5 font-display text-2xl font-extrabold">Thông tin thanh toán</p>
+                    <p className="mt-2 max-w-sm text-sm leading-relaxed text-primary-foreground/70">Hoàn tất biểu mẫu để hiển thị cú pháp chuyển khoản riêng của bạn.</p>
+                  </div>
+                ) : (
+                  <div className="rounded-2xl bg-surface p-6 text-ink shadow-xl sm:p-8" aria-live="polite">
+                    <div className="flex items-center justify-between gap-4"><img src={bidvLogo} alt="Ngân hàng BIDV" className="h-12 w-auto max-w-32" /><span className="rounded-full bg-mint/25 px-3 py-1 text-xs font-bold">Chuyển khoản</span></div>
+                    <div className="mt-6 space-y-4">
+                      <div><p className="text-xs font-bold uppercase text-ink/55">Chủ tài khoản</p><p className="mt-1 font-extrabold">PHẠM THỊ THU THỦY</p></div>
+                      <div><p className="text-xs font-bold uppercase text-ink/55">Số tài khoản</p><div className="mt-1 flex items-center justify-between gap-3"><p className="font-display text-2xl font-extrabold">4831027136</p><Button type="button" variant="outline" size="icon" className="size-11 shrink-0" onClick={() => copyPayment("4831027136", "account")} aria-label="Sao chép số tài khoản"><Copy /></Button></div>{copied === "account" && <p className="mt-1 text-xs font-bold text-brand">Đã sao chép</p>}</div>
+                      <div><p className="text-xs font-bold uppercase text-ink/55">Số tiền</p><p className="mt-1 font-display text-3xl font-extrabold text-brand">999.000đ</p></div>
+                      <div className="rounded-xl border border-brand/20 bg-soft-rose p-4"><p className="text-xs font-bold uppercase text-brand">Nội dung chuyển khoản</p><div className="mt-2 flex items-center justify-between gap-3"><p className="min-w-0 break-all font-extrabold">{paymentContent}</p><Button type="button" variant="outline" size="icon" className="size-11 shrink-0 bg-surface" onClick={() => copyPayment(paymentContent, "content")} aria-label="Sao chép nội dung chuyển khoản"><Copy /></Button></div>{copied === "content" && <p className="mt-1 text-xs font-bold text-brand">Đã sao chép</p>}</div>
+                    </div>
+                    <div className="mt-6 border-t border-ink/10 pt-6"><p className="font-bold">Sau khi chuyển khoản</p><p className="mt-2 text-sm leading-relaxed text-ink/70">Chụp bill và gửi vào nhóm Zalo để Thủy xác nhận.</p><Button asChild className="mt-4 min-h-14 w-full rounded-xl bg-brand px-5 text-base font-extrabold hover:bg-brand-deep"><a href="https://zalo.me/g/1kudiz2qumbnnhjtcidj" target="_blank" rel="noopener noreferrer">Gửi bill vào nhóm Zalo <ExternalLink /></a></Button></div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </section>
@@ -374,9 +500,11 @@ function Index() {
         </div>
       </footer>
 
-      <a href="#goi" className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 right-4 z-[60] flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-primary-foreground/15 bg-brand px-5 py-3.5 text-sm font-extrabold text-primary-foreground shadow-xl md:hidden">
-        Sở hữu ĐỘI NGŨ SUB AGENT — 499K <ArrowRight className="size-4" />
-      </a>
+      {!checkoutVisible && (
+        <a href="#goi" className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 right-4 z-[60] flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-primary-foreground/15 bg-brand px-5 py-3.5 text-sm font-extrabold text-primary-foreground shadow-xl md:hidden">
+          Sở hữu ĐỘI NGŨ SUB AGENT — 999K <ArrowRight className="size-4" />
+        </a>
+      )}
     </div>
   );
 }
