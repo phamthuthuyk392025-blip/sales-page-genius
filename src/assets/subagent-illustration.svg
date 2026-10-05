@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960" role="img" aria-labelledby="title desc">
+  <title id="title">Người kinh doanh làm việc cùng đội ngũ AI</title>
+  <desc id="desc">Minh họa một nữ chủ doanh nghiệp đang làm việc cùng năm trợ lý AI.</desc>
+  <rect width="800" height="960" rx="48" fill="#F7F5FA"/>
+  <circle cx="640" cy="168" r="94" fill="#F6D890"/>
+  <path d="M84 748C125 570 254 464 402 468c168 4 285 123 322 280v142H84V748Z" fill="#202337"/>
+  <path d="M307 414c-44-46-55-121-18-181 38-63 118-88 187-57 70 32 103 112 73 182-10 23-25 42-43 57l-12 94-176-2-11-93Z" fill="#5932A9"/>
+  <ellipse cx="419" cy="339" rx="116" ry="136" fill="#F5BC99"/>
+  <path d="M307 337c-9-83 26-157 104-175 74-17 141 30 159 88-64 12-121-2-167-42-22 70-57 108-96 129Z" fill="#24263A"/>
+  <circle cx="383" cy="338" r="8" fill="#24263A"/><circle cx="474" cy="338" r="8" fill="#24263A"/>
+  <path d="M397 397c23 17 51 17 74-1" fill="none" stroke="#A45453" stroke-width="9" stroke-linecap="round"/>
+  <path d="M279 562c87-61 208-60 295 0l-31 232H313l-34-232Z" fill="#EF5B63"/>
+  <rect x="225" y="665" width="404" height="235" rx="24" fill="#FFFFFF" stroke="#25283C" stroke-width="8"/>
+  <rect x="253" y="694" width="348" height="171" rx="14" fill="#F1EDF8"/>
+  <path d="M355 782h144" stroke="#5932A9" stroke-width="18" stroke-linecap="round"/>
+  <g font-family="Arial, sans-serif" font-weight="700" font-size="24" fill="#25283C">
+    <g><rect x="48" y="114" width="224" height="78" rx="22" fill="#FFFFFF" stroke="#D8D4E0" stroke-width="3"/><circle cx="91" cy="153" r="22" fill="#F6D890"/><text x="126" y="162">CHIẾN LƯỢC</text></g>
+    <g><rect x="528" y="280" width="224" height="78" rx="22" fill="#FFFFFF" stroke="#D8D4E0" stroke-width="3"/><circle cx="571" cy="319" r="22" fill="#BFE5D8"/><text x="606" y="328">NGHIÊN CỨU</text></g>
+    <g><rect x="41" y="328" width="208" height="78" rx="22" fill="#FFFFFF" stroke="#D8D4E0" stroke-width="3"/><circle cx="84" cy="367" r="22" fill="#F5B2B7"/><text x="119" y="376">NỘI DUNG</text></g>
+    <g><rect x="538" y="432" width="214" height="78" rx="22" fill="#FFFFFF" stroke="#D8D4E0" stroke-width="3"/><circle cx="581" cy="471" r="22" fill="#F6D890"/><text x="616" y="480">TỐI ƯU</text></g>
+    <g><rect x="44" y="475" width="235" height="78" rx="22" fill="#FFFFFF" stroke="#D8D4E0" stroke-width="3"/><circle cx="87" cy="514" r="22" fill="#BFE5D8"/><text x="122" y="523">CHĂM KHÁCH</text></g>
+  </g>
+</svg>
