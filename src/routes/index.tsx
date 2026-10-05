@@ -10,6 +10,7 @@ import {
   Copy,
   ExternalLink,
   Lightbulb,
+  LockKeyhole,
   MessageCircleHeart,
   Search,
   Sparkles,
@@ -116,7 +117,7 @@ const checkoutSchema = z.object({
     .string()
     .trim()
     .regex(/^(?:\+?84|0)[0-9]{9,10}$/, "Vui lòng nhập đúng số Zalo Việt Nam."),
-  email: z.string().trim().email("Vui lòng nhập đúng địa chỉ Gmail.").max(255, "Email tối đa 255 ký tự."),
+  email: z.string().trim().email("Vui lòng nhập đúng địa chỉ Gmail.").max(255, "Email tối đa 255 ký tự.").refine((value) => value.toLowerCase().endsWith("@gmail.com"), "Vui lòng sử dụng địa chỉ @gmail.com."),
 });
 
 type CheckoutForm = z.infer<typeof checkoutSchema>;
