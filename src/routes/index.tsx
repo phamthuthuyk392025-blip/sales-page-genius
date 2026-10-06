@@ -20,8 +20,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import subagentIllustration from "@/assets/subagent-illustration.svg";
-import bidvLogo from "@/assets/bidv-logo.svg";
+import QRCode from "qrcode";
+import { PAYMENT_ACCOUNT, paymentPayload } from "@/lib/payment";
+import { trackMetaPixel } from "@/lib/meta-pixel";
+import bidvLogo from "@/assets/bidv-logo-official.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -95,7 +97,7 @@ const transformations = [
 const faqs = [
   [
     "Tôi không rành công nghệ có dùng được không?",
-    "Có. ĐỘI NGŨ SUB AGENT được thiết kế cho người không chuyên công nghệ và có Thủy & Hồng đồng hành hướng dẫn theo cách dễ hiểu.",
+    "Có. ĐỘI NGŨ SUB AGENT được thiết kế cho người không chuyên công nghệ và có hướng dẫn theo cách dễ hiểu.",
   ],
   [
     "ĐỘI NGŨ SUB AGENT có phải là một chatbot không?",
@@ -103,7 +105,7 @@ const faqs = [
   ],
   [
     "ĐỘI NGŨ SUB AGENT có tự đăng bài không?",
-    "Hiện ĐỘI NGŨ SUB AGENT được giới thiệu ở vai trò hỗ trợ nghiên cứu, xây nội dung và tối ưu. Khả năng tự động đăng bài chưa nằm trong cam kết của chương trình.",
+    "Có. ĐỘI NGŨ SUB AGENT có thể tự đăng bài khi người dùng ra lệnh và đã kiểm duyệt nội dung trước khi đăng.",
   ],
   [
     "ĐỘI NGŨ SUB AGENT có tự tìm khách và bán hàng thay tôi không?",
@@ -122,31 +124,16 @@ const checkoutSchema = z.object({
 
 type CheckoutForm = z.infer<typeof checkoutSchema>;
 
-const sampleFeedback = [
-  {
-    name: "Chị Mai",
-    time: "09:18",
-    message: "Trước đây chị hay bí ý tưởng. Có quy trình chia từng nhóm việc như vậy thì dễ bắt đầu hơn nhiều.",
-  },
-  {
-    name: "Chị Lan",
-    time: "20:42",
-    message: "Phần hướng dẫn rất dễ hiểu. Chị không rành công nghệ nhưng vẫn biết nên giao việc gì cho từng trợ lý.",
-  },
-  {
-    name: "Anh Minh",
-    time: "14:05",
-    message: "Điểm chị thích là không hỏi AI lan man nữa. Mỗi bước đều rõ mục tiêu và đầu ra cần có.",
-  },
-];
-
 function Index() {
   const [form, setForm] = useState<CheckoutForm>({ name: "", zalo: "", email: "" });
   const [errors, setErrors] = useState<Partial<Record<keyof CheckoutForm, string>>>({});
   const [showPayment, setShowPayment] = useState(false);
   const [copied, setCopied] = useState<"account" | "content" | null>(null);
   const [checkoutVisible, setCheckoutVisible] = useState(false);
-  const paymentContent = `${form.zalo.trim()} SUBAGENT`;
+  const [paymentZalo, setPaymentZalo] = useState("");
+  const [qrImage, setQrImage] = useState("");
+  const [qrError, setQrError] = useState("");
+  const paymentContent = `${paymentZalo} SUBAGENT999TH`;
 
   useEffect(() => {
     const checkout = document.getElementById("lien-he");
@@ -156,7 +143,7 @@ function Index() {
     return () => observer.disconnect();
   }, []);
 
-  function handleCheckout(event: FormEvent<HTMLFormElement>) {
+  async function handleCheckout(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const result = checkoutSchema.safeParse(form);
     if (!result.success) {
@@ -172,7 +159,19 @@ function Index() {
 
     setForm(result.data);
     setErrors({});
+    trackMetaPixel("CompleteRegistration", {
+      content_name: "ĐỘI NGŨ SUB AGENT",
+      status: true,
+    });
+    setPaymentZalo(result.data.zalo);
+    setQrImage("");
+    setQrError("");
     setShowPayment(true);
+    try {
+      setQrImage(await QRCode.toDataURL(paymentPayload(result.data.zalo), { width: 360, margin: 4, errorCorrectionLevel: "M" }));
+    } catch {
+      setQrError("Chưa tạo được mã QR. Vui lòng bấm tiếp tục để thử lại hoặc dùng thông tin chuyển khoản bên dưới.");
+    }
     requestAnimationFrame(() => document.getElementById("thanh-toan")?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }
 
@@ -230,32 +229,14 @@ function Index() {
                   Xem 5 nhóm AI <ArrowDown className="size-5" />
                 </a>
               </div>
-              <div className="mt-8 flex items-center gap-3">
-                <div className="flex -space-x-3">
-                  <span className="grid size-11 place-items-center rounded-full bg-mint font-bold ring-4 ring-cream">T</span>
-                  <span className="grid size-11 place-items-center rounded-full bg-accent-warm font-bold ring-4 ring-cream">H</span>
-                </div>
-                <p className="text-sm font-semibold text-ink/75">Đồng hành cùng <strong className="text-ink">Thủy & Hồng</strong></p>
-              </div>
+
             </div>
 
             <div className="lg:col-span-5">
               <div className="relative mx-auto max-w-md">
                 <div className="absolute -inset-3 rotate-3 rounded-2xl bg-accent-warm" />
                 <div className="pop-shadow relative overflow-hidden rounded-2xl bg-surface p-4 sm:p-5">
-                  <img src={subagentIllustration} alt="Minh họa nữ chủ doanh nghiệp làm việc cùng năm trợ lý AI" className="aspect-[4/5] w-full rounded-xl object-cover" />
-                  <div className="absolute inset-x-7 bottom-7 rounded-xl border border-ink/10 bg-surface/95 p-4 shadow-lg backdrop-blur-sm">
-                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
-                    <div className="min-w-0">
-                      <p className="truncate font-display text-xl font-extrabold">ĐỘI NGŨ SUB AGENT</p>
-                      <p className="text-xs font-semibold text-ink/65">5 vai trò • 1 quy trình</p>
-                    </div>
-                    <span className="shrink-0 rounded-full bg-mint/20 px-3 py-1 text-xs font-bold">Sẵn sàng</span>
-                  </div>
-                    <div className="mt-3 flex gap-1.5" aria-label="Năm nhóm trợ lý đã sẵn sàng">
-                      {agents.map((agent) => <span key={agent.title} className="h-2 flex-1 rounded-full bg-brand" />)}
-                    </div>
-                  </div>
+                  <img src="/sub-agent-thu-thuy.png" alt="Thu Thủy và đội ngũ Sub AI Agent hỗ trợ nghiên cứu, ý tưởng, nội dung, đăng bài và chăm sóc khách hàng" width={1086} height={1448} className="h-auto w-full rounded-xl" />
                 </div>
               </div>
             </div>
@@ -376,51 +357,24 @@ function Index() {
                 <div>
                   <span className="inline-flex rounded-full bg-primary-foreground/15 px-4 py-2 text-sm font-extrabold">Ưu đãi mở bán đầu tiên</span>
                   <h2 className="mt-5 font-display text-4xl font-extrabold leading-tight md:text-5xl">Xây ĐỘI NGŨ SUB AGENT của bạn.</h2>
-                  <p className="mt-4 max-w-xl text-lg leading-relaxed text-primary-foreground/80">5 nhóm AI, hướng dẫn dễ hiểu, đồng hành cùng Thủy & Hồng.</p>
+                  <p className="mt-4 max-w-xl text-lg leading-relaxed text-primary-foreground/80">5 nhóm AI, hướng dẫn dễ hiểu, quy trình làm việc rõ ràng.</p>
                   <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                    {["5 nhóm AI rõ vai trò", "Hướng dẫn dễ hiểu", "Quy trình content & kênh", "Thủy & Hồng đồng hành"].map((item) => (
+                    {["5 nhóm AI rõ vai trò", "Hướng dẫn dễ hiểu", "Quy trình content & kênh", "Chủ động kiểm duyệt nội dung"].map((item) => (
                       <div key={item} className="flex items-center gap-2 min-w-0 text-sm font-semibold"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-accent-warm text-ink"><Check className="size-4" /></span>{item}</div>
                     ))}
                   </div>
                 </div>
                 <div className="pop-shadow rounded-2xl bg-surface p-7 text-ink md:p-8">
                   <p className="text-sm font-bold text-ink/65">Giá niêm yết</p>
-                  <p className="text-xl font-bold text-ink/40 line-through">1.999.000đ</p>
+                  <p className="text-xl font-bold text-ink/40 line-through">3.999.000đ</p>
                   <p className="mt-4 text-sm font-extrabold uppercase text-brand">Giá mở bán</p>
                   <p className="font-display text-5xl font-extrabold leading-none sm:text-6xl">999.000đ</p>
-                  <p className="mt-2 font-bold text-brand">Tiết kiệm 1.000.000đ (~50%)</p>
+                  <p className="mt-2 font-bold text-brand">Tiết kiệm 3.000.000đ (~75%)</p>
                   <a href="#lien-he" className="mt-7 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-brand px-6 py-4 shadow-lg shadow-brand/20 text-center text-lg font-extrabold text-primary-foreground transition-transform active:scale-[0.98] sm:hover:-translate-y-0.5">
                     Tôi muốn sở hữu ĐỘI NGŨ SUB AGENT <ArrowRight className="size-5" />
                   </a>
                   <p className="mt-4 text-center text-xs leading-relaxed text-ink/65">999.000đ áp dụng trong đợt mở bán đầu tiên.</p>
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-cream py-16 lg:py-24" aria-labelledby="feedback-title">
-          <div className="mx-auto max-w-6xl px-5 sm:px-6">
-            <div className="mx-auto max-w-3xl text-center">
-              <p className="text-sm font-extrabold uppercase text-brand">Hình dung trải nghiệm sử dụng</p>
-              <h2 id="feedback-title" className="mt-3 font-display text-4xl font-extrabold leading-tight md:text-5xl">Tin nhắn sau khi bắt đầu.</h2>
-              <p className="mt-4 text-ink/75">Các đoạn dưới đây là tin nhắn minh họa, không phải đánh giá khách hàng thật.</p>
-            </div>
-            <div className="mx-auto mt-10 max-w-4xl rounded-2xl border border-ink/10 bg-surface shadow-sm">
-              <div className="flex items-center justify-between border-b border-ink/10 px-5 py-4">
-                <div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-full bg-brand font-bold text-primary-foreground">S</span><div><p className="font-bold">Cộng đồng SUB AGENT</p><p className="text-xs text-ink/60">Tin nhắn minh họa</p></div></div>
-                <span className="rounded-full bg-mint/25 px-3 py-1 text-xs font-bold">Zalo</span>
-              </div>
-              <div className="space-y-5 bg-soft-rose/50 p-5 sm:p-8">
-                {sampleFeedback.map((item, index) => (
-                  <div key={item.name} className={`flex gap-3 ${index === 1 ? "sm:ml-12" : ""}`}>
-                    <span className="grid size-10 shrink-0 place-items-center rounded-full bg-accent-warm text-sm font-extrabold">{item.name.slice(-1)}</span>
-                    <div className="max-w-2xl min-w-0 rounded-2xl rounded-tl-sm bg-surface p-4 shadow-sm">
-                      <div className="flex items-center justify-between gap-4"><strong className="text-sm">{item.name}</strong><span className="text-xs text-ink/50">{item.time}</span></div>
-                      <p className="mt-2 text-sm leading-relaxed text-ink/75 sm:text-base">{item.message}</p>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           </div>
@@ -478,13 +432,19 @@ function Index() {
                 ) : (
                   <div className="rounded-2xl bg-surface p-6 text-ink shadow-xl sm:p-8" aria-live="polite">
                     <div className="flex items-center justify-between gap-4"><img src={bidvLogo} alt="Ngân hàng BIDV" className="h-12 w-auto max-w-32" /><span className="rounded-full bg-mint/25 px-3 py-1 text-xs font-bold">Chuyển khoản</span></div>
+                    <div className="mt-6 rounded-xl border border-ink/10 bg-white p-3 text-center">
+                      <p className="font-bold">Quét QR để thanh toán 999.000đ</p>
+                      {qrImage && <img src={qrImage} alt="Mã VietQR BIDV thanh toán 999.000đ với số Zalo của bạn" width={360} height={360} className="mx-auto h-auto w-full max-w-[360px]" />}
+                      {qrError && <p role="alert" className="mt-3 text-sm text-destructive">{qrError}</p>}
+                      <p className="text-xs text-ink/65">Nội dung chuyển khoản: {paymentContent}</p>
+                    </div>
                     <div className="mt-6 space-y-4">
                       <div><p className="text-xs font-bold uppercase text-ink/55">Chủ tài khoản</p><p className="mt-1 font-extrabold">PHẠM THỊ THU THỦY</p></div>
-                      <div><p className="text-xs font-bold uppercase text-ink/55">Số tài khoản</p><div className="mt-1 flex items-center justify-between gap-3"><p className="font-display text-2xl font-extrabold">4831027136</p><Button type="button" variant="outline" size="icon" className="size-11 shrink-0" onClick={() => copyPayment("4831027136", "account")} aria-label="Sao chép số tài khoản"><Copy /></Button></div>{copied === "account" && <p className="mt-1 text-xs font-bold text-brand">Đã sao chép</p>}</div>
+                      <div><p className="text-xs font-bold uppercase text-ink/55">Số tài khoản</p><div className="mt-1 flex items-center justify-between gap-3"><p className="min-w-0 break-all font-display text-xl font-extrabold">{PAYMENT_ACCOUNT}</p><Button type="button" variant="outline" size="icon" className="size-11 shrink-0" onClick={() => copyPayment(PAYMENT_ACCOUNT, "account")} aria-label="Sao chép số tài khoản"><Copy /></Button></div>{copied === "account" && <p className="mt-1 text-xs font-bold text-brand">Đã sao chép</p>}</div>
                       <div><p className="text-xs font-bold uppercase text-ink/55">Số tiền</p><p className="mt-1 font-display text-3xl font-extrabold text-brand">999.000đ</p></div>
                       <div className="rounded-xl border border-brand/20 bg-soft-rose p-4"><p className="text-xs font-bold uppercase text-brand">Nội dung chuyển khoản</p><div className="mt-2 flex items-center justify-between gap-3"><p className="min-w-0 break-all font-extrabold">{paymentContent}</p><Button type="button" variant="outline" size="icon" className="size-11 shrink-0 bg-surface" onClick={() => copyPayment(paymentContent, "content")} aria-label="Sao chép nội dung chuyển khoản"><Copy /></Button></div>{copied === "content" && <p className="mt-1 text-xs font-bold text-brand">Đã sao chép</p>}</div>
                     </div>
-                    <div className="mt-6 border-t border-ink/10 pt-6"><p className="font-bold">Sau khi chuyển khoản</p><p className="mt-2 text-sm leading-relaxed text-ink/70">Chụp bill và gửi vào nhóm Zalo để Thủy xác nhận.</p><Button asChild className="mt-4 min-h-14 w-full rounded-xl bg-brand px-5 text-base font-extrabold hover:bg-brand-deep"><a href="https://zalo.me/g/1kudiz2qumbnnhjtcidj" target="_blank" rel="noopener noreferrer">Gửi bill vào nhóm Zalo <ExternalLink /></a></Button></div>
+                    <div className="mt-6 border-t border-ink/10 pt-6"><p className="font-bold">Sau khi chuyển khoản</p><p className="mt-2 text-sm leading-relaxed text-ink/70">Chụp bill và gửi vào nhóm Zalo để Thủy xác nhận.</p><Button asChild className="mt-4 min-h-14 w-full rounded-xl bg-brand px-5 text-base font-extrabold hover:bg-brand-deep"><a href="https://zalo.me/g/1kudiz2qumbnnhjtcidj" target="_blank" rel="noopener noreferrer" onClick={() => trackMetaPixel("Purchase", { value: 999000, currency: "VND", content_name: "ĐỘI NGŨ SUB AGENT", content_type: "product" })}>Tôi đã chuyển khoản — Gửi bill Zalo <ExternalLink /></a></Button></div>
                   </div>
                 )}
               </div>
