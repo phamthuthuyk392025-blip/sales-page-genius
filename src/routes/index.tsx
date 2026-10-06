@@ -21,7 +21,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import QRCode from "qrcode";
-import { PAYMENT_ACCOUNT, paymentPayload } from "@/lib/payment";
+import { CheckCircle2, LoaderCircle } from "lucide-react";
+import { PAYMENT_ACCOUNT, createPaymentCode, paymentContent as buildPaymentContent, paymentPayload } from "@/lib/payment";
 import { trackMetaPixel } from "@/lib/meta-pixel";
 import bidvLogo from "@/assets/bidv-logo-official.png";
 
@@ -131,9 +132,11 @@ function Index() {
   const [copied, setCopied] = useState<"account" | "content" | null>(null);
   const [checkoutVisible, setCheckoutVisible] = useState(false);
   const [paymentZalo, setPaymentZalo] = useState("");
+  const [paymentCode, setPaymentCode] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState<"idle" | "pending" | "paid" | "error">("idle");
   const [qrImage, setQrImage] = useState("");
   const [qrError, setQrError] = useState("");
-  const paymentContent = `${paymentZalo} SUBAGENT999TH`;
+  const paymentContent = paymentCode ? buildPaymentContent(paymentZalo, paymentCode) : "";
 
   useEffect(() => {
     const checkout = document.getElementById("lien-he");
@@ -142,6 +145,42 @@ function Index() {
     observer.observe(checkout);
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (!showPayment || !paymentCode || paymentStatus === "paid") return;
+    let cancelled = false;
+    let timeoutId: number | undefined;
+
+    async function checkPayment() {
+      try {
+        const response = await fetch(`/api/payment-status?code=${encodeURIComponent(paymentCode)}`, { cache: "no-store" });
+        const data = (await response.json()) as { paid?: boolean; error?: string; transactionId?: string };
+        if (cancelled) return;
+        if (response.ok && data.paid) {
+          setPaymentStatus("paid");
+          trackMetaPixel("Purchase", {
+            value: 999000,
+            currency: "VND",
+            content_name: "ĐỘI NGŨ SUB AGENT",
+            content_type: "product",
+            order_id: paymentCode,
+          });
+          return;
+        }
+        setPaymentStatus(response.ok ? "pending" : "error");
+      } catch {
+        if (!cancelled) setPaymentStatus("error");
+      }
+      if (!cancelled) timeoutId = window.setTimeout(checkPayment, 5000);
+    }
+
+    setPaymentStatus("pending");
+    timeoutId = window.setTimeout(checkPayment, 1500);
+    return () => {
+      cancelled = true;
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
+  }, [paymentCode, paymentStatus, showPayment]);
 
   async function handleCheckout(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -164,11 +203,14 @@ function Index() {
       status: true,
     });
     setPaymentZalo(result.data.zalo);
+    const nextPaymentCode = createPaymentCode();
+    setPaymentCode(nextPaymentCode);
+    setPaymentStatus("pending");
     setQrImage("");
     setQrError("");
     setShowPayment(true);
     try {
-      setQrImage(await QRCode.toDataURL(paymentPayload(result.data.zalo), { width: 360, margin: 4, errorCorrectionLevel: "M" }));
+      setQrImage(await QRCode.toDataURL(paymentPayload(result.data.zalo, nextPaymentCode), { width: 360, margin: 4, errorCorrectionLevel: "M" }));
     } catch {
       setQrError("Chưa tạo được mã QR. Vui lòng bấm tiếp tục để thử lại hoặc dùng thông tin chuyển khoản bên dưới.");
     }
@@ -438,13 +480,25 @@ function Index() {
                       {qrError && <p role="alert" className="mt-3 text-sm text-destructive">{qrError}</p>}
                       <p className="text-xs text-ink/65">Nội dung chuyển khoản: {paymentContent}</p>
                     </div>
+                    {paymentStatus === "paid" ? (
+                      <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-center text-emerald-800">
+                        <CheckCircle2 className="mx-auto size-9" />
+                        <p className="mt-2 font-display text-xl font-extrabold">Thanh toán thành công!</p>
+                        <p className="mt-1 text-sm">Mã đơn {paymentCode} đã được SePay xác nhận.</p>
+                      </div>
+                    ) : (
+                      <div className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-amber-50 px-4 py-3 text-sm font-bold text-amber-800">
+                        <LoaderCircle className="size-5 animate-spin" />
+                        {paymentStatus === "error" ? "Đang kết nối lại với SePay…" : "Đang chờ SePay xác nhận thanh toán…"}
+                      </div>
+                    )}
                     <div className="mt-6 space-y-4">
                       <div><p className="text-xs font-bold uppercase text-ink/55">Chủ tài khoản</p><p className="mt-1 font-extrabold">PHẠM THỊ THU THỦY</p></div>
                       <div><p className="text-xs font-bold uppercase text-ink/55">Số tài khoản</p><div className="mt-1 flex items-center justify-between gap-3"><p className="min-w-0 break-all font-display text-xl font-extrabold">{PAYMENT_ACCOUNT}</p><Button type="button" variant="outline" size="icon" className="size-11 shrink-0" onClick={() => copyPayment(PAYMENT_ACCOUNT, "account")} aria-label="Sao chép số tài khoản"><Copy /></Button></div>{copied === "account" && <p className="mt-1 text-xs font-bold text-brand">Đã sao chép</p>}</div>
                       <div><p className="text-xs font-bold uppercase text-ink/55">Số tiền</p><p className="mt-1 font-display text-3xl font-extrabold text-brand">999.000đ</p></div>
                       <div className="rounded-xl border border-brand/20 bg-soft-rose p-4"><p className="text-xs font-bold uppercase text-brand">Nội dung chuyển khoản</p><div className="mt-2 flex items-center justify-between gap-3"><p className="min-w-0 break-all font-extrabold">{paymentContent}</p><Button type="button" variant="outline" size="icon" className="size-11 shrink-0 bg-surface" onClick={() => copyPayment(paymentContent, "content")} aria-label="Sao chép nội dung chuyển khoản"><Copy /></Button></div>{copied === "content" && <p className="mt-1 text-xs font-bold text-brand">Đã sao chép</p>}</div>
                     </div>
-                    <div className="mt-6 border-t border-ink/10 pt-6"><p className="font-bold">Sau khi chuyển khoản</p><p className="mt-2 text-sm leading-relaxed text-ink/70">Chụp bill và gửi vào nhóm Zalo để Thủy xác nhận.</p><Button asChild className="mt-4 min-h-14 w-full rounded-xl bg-brand px-5 text-base font-extrabold hover:bg-brand-deep"><a href="https://zalo.me/g/1kudiz2qumbnnhjtcidj" target="_blank" rel="noopener noreferrer" onClick={() => trackMetaPixel("Purchase", { value: 999000, currency: "VND", content_name: "ĐỘI NGŨ SUB AGENT", content_type: "product" })}>Tôi đã chuyển khoản — Gửi bill Zalo <ExternalLink /></a></Button></div>
+                    <div className="mt-6 border-t border-ink/10 pt-6"><p className="font-bold">Sau khi chuyển khoản</p><p className="mt-2 text-sm leading-relaxed text-ink/70">Website sẽ tự xác nhận. Nếu cần hỗ trợ, gửi bill vào nhóm Zalo.</p><Button asChild className="mt-4 min-h-14 w-full rounded-xl bg-brand px-5 text-base font-extrabold hover:bg-brand-deep"><a href="https://zalo.me/g/1kudiz2qumbnnhjtcidj" target="_blank" rel="noopener noreferrer">Gửi bill hoặc nhận hỗ trợ qua Zalo <ExternalLink /></a></Button></div>
                   </div>
                 )}
               </div>

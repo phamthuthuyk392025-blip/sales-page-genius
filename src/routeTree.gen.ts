@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPaymentStatusRouteImport } from './routes/api/payment-status'
+import { Route as ApiSepayWebhookRouteImport } from './routes/api/sepay-webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPaymentStatusRoute = ApiPaymentStatusRouteImport.update({
+  id: '/api/payment-status',
+  path: '/api/payment-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSepayWebhookRoute = ApiSepayWebhookRouteImport.update({
+  id: '/api/sepay-webhook',
+  path: '/api/sepay-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/payment-status': typeof ApiPaymentStatusRoute
+  '/api/sepay-webhook': typeof ApiSepayWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/payment-status': typeof ApiPaymentStatusRoute
+  '/api/sepay-webhook': typeof ApiSepayWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/payment-status': typeof ApiPaymentStatusRoute
+  '/api/sepay-webhook': typeof ApiSepayWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/api/payment-status' | '/api/sepay-webhook'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/api/payment-status' | '/api/sepay-webhook'
+  id: '__root__' | '/' | '/api/payment-status' | '/api/sepay-webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiPaymentStatusRoute: typeof ApiPaymentStatusRoute
+  ApiSepayWebhookRoute: typeof ApiSepayWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/payment-status': {
+      id: '/api/payment-status'
+      path: '/api/payment-status'
+      fullPath: '/api/payment-status'
+      preLoaderRoute: typeof ApiPaymentStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/sepay-webhook': {
+      id: '/api/sepay-webhook'
+      path: '/api/sepay-webhook'
+      fullPath: '/api/sepay-webhook'
+      preLoaderRoute: typeof ApiSepayWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiPaymentStatusRoute: ApiPaymentStatusRoute,
+  ApiSepayWebhookRoute: ApiSepayWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
