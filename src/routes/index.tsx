@@ -498,7 +498,22 @@ function Index() {
                       <div><p className="text-xs font-bold uppercase text-ink/55">Số tiền</p><p className="mt-1 font-display text-3xl font-extrabold text-brand">999.000đ</p></div>
                       <div className="rounded-xl border border-brand/20 bg-soft-rose p-4"><p className="text-xs font-bold uppercase text-brand">Nội dung chuyển khoản</p><div className="mt-2 flex items-center justify-between gap-3"><p className="min-w-0 break-all font-extrabold">{paymentContent}</p><Button type="button" variant="outline" size="icon" className="size-11 shrink-0 bg-surface" onClick={() => copyPayment(paymentContent, "content")} aria-label="Sao chép nội dung chuyển khoản"><Copy /></Button></div>{copied === "content" && <p className="mt-1 text-xs font-bold text-brand">Đã sao chép</p>}</div>
                     </div>
-                    <div className="mt-6 border-t border-ink/10 pt-6"><p className="font-bold">Sau khi chuyển khoản</p><p className="mt-2 text-sm leading-relaxed text-ink/70">Website sẽ tự xác nhận. Nếu cần hỗ trợ, gửi bill vào nhóm Zalo.</p><Button asChild className="mt-4 min-h-14 w-full rounded-xl bg-brand px-5 text-base font-extrabold hover:bg-brand-deep"><a href="https://zalo.me/g/1kudiz2qumbnnhjtcidj" target="_blank" rel="noopener noreferrer">Gửi bill hoặc nhận hỗ trợ qua Zalo <ExternalLink /></a></Button></div>
+                    <div className="mt-6 border-t border-ink/10 pt-6">
+                      {paymentStatus === "paid" ? (
+                        <>
+                          <p className="font-bold">Đơn hàng đã được xác nhận</p>
+                          <p className="mt-2 text-sm leading-relaxed text-ink/70">Bấm nút bên dưới để vào nhóm Zalo và nhận hướng dẫn sử dụng ĐỘI NGŨ SUB AGENT.</p>
+                          <Button asChild className="mt-4 min-h-14 w-full rounded-xl bg-brand px-5 text-base font-extrabold hover:bg-brand-deep">
+                            <a href="https://zalo.me/g/1kudiz2qumbnnhjtcidj" target="_blank" rel="noopener noreferrer">Vào nhóm Zalo ngay <ExternalLink /></a>
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <p className="font-bold">Liên kết nhóm Zalo đang được bảo vệ</p>
+                          <p className="mt-2 text-sm leading-relaxed text-ink/70">Liên kết tham gia nhóm sẽ tự động xuất hiện ngay sau khi SePay xác nhận thanh toán thành công.</p>
+                        </>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
